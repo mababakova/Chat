@@ -1,0 +1,31 @@
+package chat;
+
+message Login
+{
+	required string login = 1;
+	required string password = 2;
+}
+
+message LoginResult
+{
+	enum Result { OK = 1; NOT_OK = 2; }
+	required Result result = 1;
+}
+
+message Message
+{
+	required string login = 1;
+	required string msg = 2;
+}
+
+message ChatMessage
+{
+	extensions 1 to max;
+}
+
+extend ChatMessage
+{
+	optional Login login = 1;
+	optional LoginResult loginResult = 2;
+	optional Message msg = 3;
+}
