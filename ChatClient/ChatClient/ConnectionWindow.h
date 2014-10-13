@@ -25,9 +25,18 @@ namespace ChatClient
 	public:
 		ConnectionWindow(void) { InitializeComponent(); }
 
+		static ConnectionWindow ^instance;
+
+		static ConnectionWindow^ getInstance() { if (!instance) instance = gcnew ConnectionWindow(); return instance; }
+
 		static void updateStatusStrip(const std::string &message);
 
 		static void autorize();
+
+		delegate void switchWindow();
+		static switchWindow ^switchDelegate;
+
+		void switchWindowMethod();
 
 	protected:
 		/// <summary>

@@ -1,4 +1,5 @@
 #include "ConnectionWindow.h"
+#include "MainWindow.h"
 #include "SocketManager.h"
 #include <msclr/marshal_cppstd.h>
 #include <boost\bind.hpp>
@@ -52,6 +53,15 @@ void ConnectionWindow::InitializeComponent()
 
 	statusLabel = gcnew ToolStripStatusLabel();
 	status->Items->Add(statusLabel);
+
+	switchDelegate = gcnew switchWindow(this, &ConnectionWindow::switchWindowMethod);
+}
+
+void ConnectionWindow::switchWindowMethod()
+{
+	this->Visible = false;
+	MainWindow^ chat = MainWindow::getInstance();
+	chat->ShowDialog();	
 }
 
 void onConnection(bool result)
@@ -73,6 +83,10 @@ void onLogin(bool result)
 	else
 		message = "Client was not connected.";
 	ConnectionWindow::updateStatusStrip(message);
+	if (result)
+	{
+		ConnectionWindow::getInstance()->Invoke(ConnectionWindow::switchDelegate);
+	}
 }
 
 void ConnectionWindow::onConnectButtonClick(Object^ sender, System::EventArgs^ e)
@@ -102,6 +116,6 @@ int main(array<System::String ^> ^args)
 	Application::EnableVisualStyles();
 	Application::SetCompatibleTextRenderingDefault(false);
 
-	Application::Run(gcnew ConnectionWindow());
+	Application::Run(ConnectionWindow::getInstance());
 	return 0;
 }

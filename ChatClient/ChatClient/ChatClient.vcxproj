@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConnectionWindow.cpp" />
+    <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="ProtobufManager.cpp" />
     <ClCompile Include="protobuf\ChatMessage.pb.cc" />
     <ClCompile Include="Socket.cpp" />
@@ -92,6 +93,7 @@
     <ClInclude Include="ConnectionWindow.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="MainWindow.h" />
     <ClInclude Include="ProtobufManager.h" />
     <ClInclude Include="protobuf\ChatMessage.pb.h" />
     <ClInclude Include="Socket.h" />
