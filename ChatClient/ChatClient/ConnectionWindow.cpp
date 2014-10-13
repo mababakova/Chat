@@ -4,6 +4,7 @@
 #include <msclr/marshal_cppstd.h>
 #include <boost\bind.hpp>
 #include <iostream>
+#include <boost/thread.hpp>
 
 using namespace ChatClient;
 
@@ -85,7 +86,7 @@ void onLogin(bool result)
 	ConnectionWindow::updateStatusStrip(message);
 	if (result)
 	{
-		ConnectionWindow::getInstance()->Invoke(ConnectionWindow::switchDelegate);
+		ConnectionWindow::getInstance()->BeginInvoke(ConnectionWindow::switchDelegate);
 	}
 }
 

@@ -20,7 +20,9 @@ void SocketManager::startAccept()
 
 void SocketManager::handleAccept(boost::shared_ptr<ClientSocket> client, const error_code & err)
 {
-	client->start(boost::bind(&SocketManager::onLogin, this, _1, _2, _3), boost::bind(&SocketManager::onDisconnect, this, _1));
+	client->start(boost::bind(&SocketManager::onLogin, this, _1, _2, _3), 
+		boost::bind(&SocketManager::onDisconnect, this, _1),
+		boost::bind(&SocketManager::messageDelivery, this, _1));
 	boost::shared_ptr<ClientSocket> newClient = ClientSocket::getInstance();
 	acceptor->async_accept(newClient->getSocket(), boost::bind(&SocketManager::handleAccept, this, newClient, _1));
 }
@@ -42,4 +44,10 @@ void SocketManager::onDisconnect(boost::shared_ptr<ClientSocket> client)
 	logger->info("Client % disconnected", client->getLogin());
 	std::unique_lock<std::mutex> lock(clientsMutex);
 	clients.erase(remove(clients.begin(), clients.end(), client));
+}
+
+void SocketManager::messageDelivery(const std::string &message)
+{
+	std::unique_lock<std::mutex> lock(clientsMutex);
+	for_each(clients.begin(), clients.end(), [&message](boost::shared_ptr<ClientSocket> client){ client->write(message.substr(0, message.size()-2)); });
 }

@@ -16,7 +16,8 @@ namespace ChatClient
 	/// </summary>
 	public ref class MainWindow : public System::Windows::Forms::Form
 	{
-
+		TextBox ^messageTextBox;
+		bool messageSent = false;
 	public:
 		MainWindow(void) { InitializeComponent(); }
 
@@ -25,6 +26,8 @@ namespace ChatClient
 		static MainWindow^ getInstance() { if (!instance) instance = gcnew MainWindow(); return instance; }
 
 		void MainWindow_Closing(Object^ obj, FormClosedEventArgs^ e) { Application::Exit(); }
+
+		void MessageTextBox_KeyPress(Object^ obj, KeyPressEventArgs^ e);
 
 	protected:
 		/// <summary>

@@ -37,5 +37,5 @@ public:
 
 	void onDisconnect(boost::shared_ptr<ClientSocket> client);
 
-	//void messageDelivery();
+	void messageDelivery(const std::string &message);
 };

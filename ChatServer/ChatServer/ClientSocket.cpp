@@ -2,10 +2,12 @@
 #include "Log.h"
 
 void ClientSocket::start(std::function<void(boost::shared_ptr<ClientSocket>, const std::string &, const std::string &)> loginCallback,
-	std::function<void(boost::shared_ptr<ClientSocket>)> disconnectCallback)
+	std::function<void(boost::shared_ptr<ClientSocket>)> disconnectCallback,
+	std::function<void(std::string &)> readCallback)
 {
 	this->loginCallback = loginCallback;
 	this->disconnectCallback = disconnectCallback;
+	this->readCallback = readCallback;
 	logger->trace("Start read client login/pwd");
 	read();
 }
@@ -34,10 +36,15 @@ void ClientSocket::onRead(const error_code &err, size_t bytes)
 							   logger->info("Get login/pwd from client");
 							   std::pair<std::string, std::string> loginPair = protobuf.getLogin(msg);
 							   this->login = loginPair.first;
-							   loginCallback(shared_from_this(), loginPair.first, loginPair.second); 
+							   loginCallback(shared_from_this(), loginPair.first, loginPair.second);
 							   break;
 	}
-	case MessageType::Message:	logger->info("Get message from client"); break;
+	case MessageType::Message:
+	{
+								 logger->info("Get message from client");
+								 readCallback(msg);
+								 break;
+	}
 	}
 	read();
 }
@@ -53,7 +60,7 @@ void ClientSocket::write(const std::string &message)
 {
 	std::string msg = message + delimeter;
 	std::copy(msg.begin(), msg.end(), write_buffer_);
-	sock.async_write_some(buffer(write_buffer_, msg.size()), boost::bind(&ClientSocket::onWrite, this, _1, _2));
+	async_write(sock, buffer(write_buffer_, msg.size()), boost::bind(&ClientSocket::onWrite, shared_from_this(), _1, _2));
 }
 
 void ClientSocket::writeLoginAnswer(bool answer)

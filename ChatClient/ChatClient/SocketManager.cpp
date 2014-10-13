@@ -26,6 +26,7 @@ void SocketManager::onConnection(bool answer)
 
 void SocketManager::autorize(const std::string &login, const std::string &pwd)
 {
+	this->login.assign(login);
 	std::string message = protobuf.getLoginMessage(login, pwd);
 	socket->write(message);
 }
@@ -39,5 +40,23 @@ void SocketManager::onRead(std::string &message)
 							   loginCallback(protobuf.getLoginResult(message));
 							   break;
 	}
+	case MessageType::Message:
+	{
+								 std::pair<std::string, std::string> data = protobuf.getMessageFromProtobuf(message);
+								 readCallback(data.first, data.second);
+								 break;
 	}
+	}
+}
+
+void SocketManager::write(std::string &data, std::function<void(std::string &, std::string &)> readCallback)
+{
+	this->readCallback = readCallback;
+	write(data);
+}
+
+void SocketManager::write(std::string &data)
+{
+	std::string message = protobuf.getMessage(login, data);
+	socket->write(message);
 }

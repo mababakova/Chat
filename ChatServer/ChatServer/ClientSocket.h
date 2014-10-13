@@ -22,6 +22,7 @@ class ClientSocket : public boost::enable_shared_from_this<ClientSocket>, boost:
 
 	std::function<void(boost::shared_ptr<ClientSocket>, const std::string &, const std::string &)> loginCallback;
 	std::function<void(boost::shared_ptr<ClientSocket>)> disconnectCallback;
+	std::function<void(std::string &)> readCallback;
 	
 	const std::string delimeter = "\r\n";
 	
@@ -32,7 +33,8 @@ public:
 	static boost::shared_ptr<ClientSocket> getInstance() { boost::shared_ptr<ClientSocket> client(new ClientSocket); return client; }
 
 	void start(std::function<void(boost::shared_ptr<ClientSocket>, const std::string &, const std::string &)> loginCallback,
-		std::function<void(boost::shared_ptr<ClientSocket>)> disconnectCallback);
+		std::function<void(boost::shared_ptr<ClientSocket>)> disconnectCallback,
+		std::function<void(std::string &)> readCallback);
 	
 	void stop() { sock.close(); disconnectCallback(shared_from_this()); }
 

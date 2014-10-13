@@ -27,6 +27,7 @@ Socket *Socket::getInstance(const std::string &address, const std::string &port,
 void Socket::onConnect(const error_code &err)
 {
 	connectionCallback(!err);
+	read();
 	if (err)
 	{
 		Sleep(1000);
@@ -43,7 +44,6 @@ void Socket::write(const std::string &msg)
 
 void Socket::onWrite(const error_code &err, size_t bytes)
 {
-	read();
 }
 
 void Socket::read()
@@ -58,6 +58,7 @@ void Socket::onRead(const error_code &err, size_t bytes)
 	if (err) return;
 	std::string msg(read_buffer_, bytes);
 	readMessageCallback(msg);
+	read();
 }
 
 size_t Socket::onReadComplete(const error_code &err, size_t bytes)

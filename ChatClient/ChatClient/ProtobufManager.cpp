@@ -8,6 +8,21 @@ std::string ProtobufManager::getLoginMessage(const std::string &lg, const std::s
 	return message.SerializeAsString();
 }
 
+std::string ProtobufManager::getMessage(const std::string &lg, const std::string &data)
+{
+	ChatMessage message;
+	message.MutableExtension(msg)->set_login(lg);
+	message.MutableExtension(msg)->set_msg(data);
+	return message.SerializeAsString();
+}
+
+std::pair<std::string, std::string> ProtobufManager::getMessageFromProtobuf(const std::string &message)
+{
+	ChatMessage data;
+	data.ParseFromString(message);
+	return std::make_pair(data.GetExtension(msg).login(), data.GetExtension(msg).msg());
+}
+
 MessageType ProtobufManager::getMessageType(const std::string &message)
 {
 	ChatMessage msg;
