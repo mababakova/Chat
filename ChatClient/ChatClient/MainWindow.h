@@ -17,7 +17,7 @@ namespace ChatClient
 	public ref class MainWindow : public System::Windows::Forms::Form
 	{
 		TextBox ^messageTextBox;
-		bool messageSent = false;
+		DataGridView ^messageLog;
 	public:
 		MainWindow(void) { InitializeComponent(); }
 
@@ -27,7 +27,12 @@ namespace ChatClient
 
 		void MainWindow_Closing(Object^ obj, FormClosedEventArgs^ e) { Application::Exit(); }
 
-		void MessageTextBox_KeyPress(Object^ obj, KeyPressEventArgs^ e);
+		void MessageTextBox_KeyEvent(Object^ obj, KeyEventArgs^ e);
+
+		delegate void updateLog(String ^login, String ^message);
+		static updateLog ^logDelegate;
+
+		void updateLogMethod(String ^login, String ^message);
 
 	protected:
 		/// <summary>

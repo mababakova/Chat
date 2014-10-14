@@ -21,6 +21,6 @@ public:
 	void autorize(const std::string &login, const std::string &pwd);
 	void onConnection(bool answer);
 	void onRead(std::string &message);
-	void write(std::string &data, std::function<void(std::string &, std::string &)> readCallback);
+	void initializeReadCallback(std::function<void(std::string &, std::string &)> readCallback) { this->readCallback = readCallback; }
 	void write(std::string &data);
 };

@@ -49,12 +49,6 @@ void SocketManager::onRead(std::string &message)
 	}
 }
 
-void SocketManager::write(std::string &data, std::function<void(std::string &, std::string &)> readCallback)
-{
-	this->readCallback = readCallback;
-	write(data);
-}
-
 void SocketManager::write(std::string &data)
 {
 	std::string message = protobuf.getMessage(login, data);

@@ -8,7 +8,7 @@ using namespace ChatClient;
 
 void onRead(std::string &login, std::string &message)
 {
-	MessageBox::Show(gcnew String(login.c_str()), gcnew String(message.c_str()));
+	MainWindow::getInstance()->BeginInvoke(MainWindow::logDelegate, gcnew String(login.c_str()), gcnew String(message.c_str()));
 }
 
 void MainWindow::InitializeComponent()
@@ -28,22 +28,49 @@ void MainWindow::InitializeComponent()
 	messageTextBox->Height = 100;
 	messageTextBox->Width = 500;
 	messageTextBox->Multiline = true;
-	messageTextBox->KeyPress += gcnew KeyPressEventHandler(this, &MainWindow::MessageTextBox_KeyPress);
+	messageTextBox->KeyUp += gcnew KeyEventHandler(this, &MainWindow::MessageTextBox_KeyEvent);
 	this->Controls->Add(messageTextBox);
+
+	messageLog = gcnew DataGridView();
+	messageLog->RowHeadersVisible = false;
+	messageLog->ColumnHeadersVisible = false;
+	messageLog->Width = 500;
+	messageLog->Height = 395;
+	messageLog->BackgroundColor = Color::White;
+	messageLog->BorderStyle = BorderStyle::None;
+	messageLog->CellBorderStyle = DataGridViewCellBorderStyle::None;
+	DataGridViewTextBoxColumn^ column1 = gcnew DataGridViewTextBoxColumn();
+	column1->Width = 50;
+	column1->DefaultCellStyle->ForeColor = Color::Blue;
+	messageLog->Columns->Add(column1);
+	DataGridViewTextBoxColumn^ column2 = gcnew DataGridViewTextBoxColumn();
+	column2->Width = 380;
+	messageLog->Columns->Add(column2);
+	this->Controls->Add(messageLog);
+
+	logDelegate = gcnew updateLog(this, &MainWindow::updateLogMethod);
+
+	SocketManager::getInstance()->initializeReadCallback(&onRead);
 }
 
-void MainWindow::MessageTextBox_KeyPress(Object^ obj, KeyPressEventArgs^ e)
+void MainWindow::updateLogMethod(String ^login, String ^message)
 {
-	if (e->KeyChar == 13)
+	DataGridViewRow ^row = gcnew DataGridViewRow();
+	row->CreateCells(messageLog);
+	row->Cells[0]->Value = login;
+	row->Cells[1]->Value = message;
+	messageLog->Rows->Add(row);
+	messageLog->Rows[0]->Selected = false;
+	messageLog->FirstDisplayedCell = messageLog->Rows[messageLog->Rows->Count - 1]->Cells[0];
+	messageLog->Invalidate();
+}
+
+void MainWindow::MessageTextBox_KeyEvent(Object^ obj, KeyEventArgs^ e)
+{
+	if (e->KeyCode == Keys::Enter)
 	{
 		std::string message = msclr::interop::marshal_as<std::string>(messageTextBox->Text);
-		if (!messageSent)
-		{
-			SocketManager::getInstance()->write(message, &onRead);
-			messageSent = true;
-		}
-		else
-			SocketManager::getInstance()->write(message);
+		SocketManager::getInstance()->write(message.substr(0, message.size() - 1));
 		messageTextBox->Clear();
 	}
 }
