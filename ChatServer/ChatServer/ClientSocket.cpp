@@ -28,6 +28,7 @@ void ClientSocket::onRead(const error_code &err, size_t bytes)
 		return;
 	}
 	std::string msg(read_buffer_, bytes);
+	msg.erase(msg.begin(), msg.begin() + msg.find(delimeter) + 2);
 	logger->info("Message: %", msg);
 	switch (protobuf.getMessageType(msg))
 	{
@@ -52,13 +53,18 @@ void ClientSocket::onRead(const error_code &err, size_t bytes)
 size_t ClientSocket::onReadComplete(const error_code &err, size_t bytes)
 {
 	if (err) return 0;
-	bool found = std::string(read_buffer_, bytes).find("\r\n") != std::string::npos;
-	return found ? 0 : 1;
+	size_t pos;
+	if ((pos = std::string(read_buffer_, bytes).find(delimeter)) != std::string::npos)
+	{
+		size_t volume = stoi(std::string(read_buffer_, bytes).substr(0, pos));
+		return bytes == (volume + pos + 2) ? 0 : 1;
+	}
+	return 1;
 }
 
 void ClientSocket::write(const std::string &message)
 {
-	std::string msg = message + delimeter;
+	std::string msg = std::to_string(message.size()) + delimeter + message;
 	std::copy(msg.begin(), msg.end(), write_buffer_);
 	async_write(sock, buffer(write_buffer_, msg.size()), boost::bind(&ClientSocket::onWrite, shared_from_this(), _1, _2));
 }

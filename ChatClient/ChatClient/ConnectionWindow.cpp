@@ -27,7 +27,7 @@ void ConnectionWindow::InitializeComponent()
 	serverAddressTextBox = gcnew TextBox();
 	serverAddressTextBox->Location = Point(25, 80);
 	serverAddressTextBox->Text = "127.0.0.1:33360";
-	Controls->Add(this->serverAddressTextBox);
+	Controls->Add(serverAddressTextBox);
 
 	loginTextBox = gcnew TextBox();
 	loginTextBox->Location = Point(25, 110);
@@ -41,6 +41,7 @@ void ConnectionWindow::InitializeComponent()
 	pwdTextBox->Height = 20;
 	pwdTextBox->Width = 50;
 	pwdTextBox->Text = "test123";
+	pwdTextBox->PasswordChar = '*';
 	Controls->Add(pwdTextBox);
 
 	connectButton = gcnew Button();

@@ -49,5 +49,5 @@ void SocketManager::onDisconnect(boost::shared_ptr<ClientSocket> client)
 void SocketManager::messageDelivery(const std::string &message)
 {
 	std::unique_lock<std::mutex> lock(clientsMutex);
-	for_each(clients.begin(), clients.end(), [&message](boost::shared_ptr<ClientSocket> client){ client->write(message.substr(0, message.size()-2)); });
+	for_each(clients.begin(), clients.end(), [&message](boost::shared_ptr<ClientSocket> client){ client->write(message); });
 }

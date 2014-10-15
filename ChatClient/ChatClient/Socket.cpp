@@ -37,13 +37,14 @@ void Socket::onConnect(const error_code &err)
 
 void Socket::write(const std::string &msg)
 {
-	std::string message = msg + delimeter;
+	std::string message = std::to_string(msg.size()) + delimeter + msg;
 	std::copy(message.begin(), message.end(), write_buffer_);
 	sock->async_write_some(buffer(write_buffer_, message.size()), boost::bind(&Socket::onWrite, this, _1, _2));
 }
 
 void Socket::onWrite(const error_code &err, size_t bytes)
 {
+	int i = 0;
 }
 
 void Socket::read()
@@ -57,6 +58,7 @@ void Socket::onRead(const error_code &err, size_t bytes)
 {
 	if (err) return;
 	std::string msg(read_buffer_, bytes);
+	msg.erase(msg.begin(), msg.begin() + msg.find(delimeter) + 2);
 	readMessageCallback(msg);
 	read();
 }
@@ -64,6 +66,11 @@ void Socket::onRead(const error_code &err, size_t bytes)
 size_t Socket::onReadComplete(const error_code &err, size_t bytes)
 {
 	if (err) return 0;
-	bool found = std::string(read_buffer_, bytes).find("\r\n") != std::string::npos;
-	return found ? 0 : 1;
+	size_t pos;
+	if ((pos = std::string(read_buffer_, bytes).find(delimeter)) != std::string::npos)
+	{
+		size_t volume = stoi(std::string(read_buffer_, bytes).substr(0, pos));
+		return bytes == (volume + pos + 2) ? 0 : 1;
+	}
+	return 1;
 }

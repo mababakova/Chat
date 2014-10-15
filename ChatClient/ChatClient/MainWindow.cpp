@@ -70,7 +70,9 @@ void MainWindow::MessageTextBox_KeyEvent(Object^ obj, KeyEventArgs^ e)
 	if (e->KeyCode == Keys::Enter)
 	{
 		std::string message = msclr::interop::marshal_as<std::string>(messageTextBox->Text);
-		SocketManager::getInstance()->write(message.substr(0, message.size() - 1));
+		// Remove '\n' in message
+		message.pop_back();
+		SocketManager::getInstance()->write(message);
 		messageTextBox->Clear();
 	}
 }

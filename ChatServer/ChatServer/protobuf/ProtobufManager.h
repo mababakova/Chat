@@ -2,7 +2,7 @@
 #include <iostream>
 #include <protobuf\ChatMessage.pb.h>
 
-enum MessageType { Login = 1, Message };
+enum MessageType { Login = 1, Message, Incorrect };
 
 using namespace chat;
 
