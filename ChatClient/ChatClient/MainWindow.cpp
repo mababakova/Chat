@@ -23,6 +23,9 @@ void MainWindow::InitializeComponent()
 	FormClosedEventHandler^ handler = gcnew FormClosedEventHandler(this, &MainWindow::MainWindow_Closing);
 	this->FormClosed += handler;
 
+	System::Drawing::Icon ^icon = gcnew System::Drawing::Icon("icon.ico");
+	Icon = icon;
+
 	messageTextBox = gcnew TextBox();
 	messageTextBox->Top = 400;
 	messageTextBox->Height = 100;

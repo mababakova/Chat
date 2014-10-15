@@ -96,6 +96,7 @@
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="ProtobufManager.h" />
     <ClInclude Include="protobuf\ChatMessage.pb.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Socket.h" />
     <ClInclude Include="SocketManager.h" />
   </ItemGroup>
@@ -103,6 +104,12 @@
     <EmbeddedResource Include="ConnectionWindow.resx">
       <DependentUpon>ConnectionWindow.h</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ChatClient.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -18,6 +18,9 @@ void ConnectionWindow::InitializeComponent()
 	this->Text = L"Connection";
 	this->ResumeLayout(false);
 
+	System::Drawing::Icon ^icon = gcnew System::Drawing::Icon("icon.ico");
+	Icon = icon;
+
 	descriptionLabel = gcnew Label();
 	descriptionLabel->Text = "Enter server IP address and port in format <IP>:<port>,\nlogin and password in fields\nand press the button";
 	descriptionLabel->Location = Point(25, 30);
