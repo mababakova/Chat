@@ -13,7 +13,27 @@ SERVICE_STATUS_HANDLE serviceStatusHandle;
 
 void ControlHandler(DWORD request)
 {
+	switch (request)
+	{
+	case SERVICE_CONTROL_STOP:
 
+		serviceStatus.dwWin32ExitCode = 0;
+		serviceStatus.dwCurrentState = SERVICE_STOPPED;
+		SetServiceStatus(serviceStatusHandle, &serviceStatus);
+		return;
+
+	case SERVICE_CONTROL_SHUTDOWN:
+
+		serviceStatus.dwWin32ExitCode = 0;
+		serviceStatus.dwCurrentState = SERVICE_STOPPED;
+		SetServiceStatus(serviceStatusHandle, &serviceStatus);
+		return;
+
+	default:
+		break;
+	}
+
+	SetServiceStatus(serviceStatusHandle, &serviceStatus);
 }
 
 void ServiceMain(int argc, char** argv)

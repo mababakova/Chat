@@ -45,10 +45,21 @@ void MainWindow::InitializeComponent()
 	DataGridViewTextBoxColumn^ column1 = gcnew DataGridViewTextBoxColumn();
 	column1->Width = 50;
 	column1->DefaultCellStyle->ForeColor = Color::Blue;
+	column1->DefaultCellStyle->SelectionBackColor = messageLog->DefaultCellStyle->BackColor;
+	column1->DefaultCellStyle->SelectionForeColor = Color::Blue;
+	column1->DefaultCellStyle->WrapMode = DataGridViewTriState::True;
+	column1->DefaultCellStyle->Alignment = DataGridViewContentAlignment::TopLeft;
+	column1->ReadOnly = true;
 	messageLog->Columns->Add(column1);
 	DataGridViewTextBoxColumn^ column2 = gcnew DataGridViewTextBoxColumn();
 	column2->Width = 380;
+	column2->DefaultCellStyle->SelectionBackColor = messageLog->DefaultCellStyle->BackColor;
+	column2->DefaultCellStyle->SelectionForeColor = messageLog->DefaultCellStyle->ForeColor;
+	column2->DefaultCellStyle->WrapMode = DataGridViewTriState::True;
+	column2->DefaultCellStyle->Alignment = DataGridViewContentAlignment::TopLeft;
+	column2->ReadOnly = true;
 	messageLog->Columns->Add(column2);
+	messageLog->AutoSizeRowsMode = DataGridViewAutoSizeRowsMode::AllCells;
 	this->Controls->Add(messageLog);
 
 	logDelegate = gcnew updateLog(this, &MainWindow::updateLogMethod);
