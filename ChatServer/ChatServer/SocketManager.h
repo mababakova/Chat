@@ -29,6 +29,8 @@ private:
 public:
 	SocketManager();
 
+	void start();
+
 	void startAccept();
 
 	void handleAccept(boost::shared_ptr<ClientSocket> client, const error_code & err);

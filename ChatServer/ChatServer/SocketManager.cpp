@@ -8,6 +8,10 @@ SocketManager::SocketManager()
 	sqlConnector.getLogins();
 	ep = new ip::tcp::endpoint(ip::address::from_string(Configuration::getInstance()->getAddress()), Configuration::getInstance()->getPort());
 	acceptor = new ip::tcp::acceptor(service, *ep);
+}
+
+void SocketManager::start()
+{
 	startAccept();
 	service.run();
 }

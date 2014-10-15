@@ -54,7 +54,8 @@ void ServiceMain(int argc, char** argv)
 	serviceStatus.dwCurrentState = SERVICE_RUNNING;
 	SetServiceStatus(serviceStatusHandle, &serviceStatus);
 
-
+	SocketManager *sock = new SocketManager();
+	sock->start();
 
 	while (serviceStatus.dwCurrentState == SERVICE_RUNNING)
 	{
@@ -70,7 +71,6 @@ int main(int argc, char* argv[])
 	path = path.substr(0, found + 1);
 	Configuration *configuration = Configuration::getInstance(path);
 	Log *loggr = Log::getInstance();
-	SocketManager *sock = new SocketManager();
 
 	serviceName = L"ChatServer";
 	SetPriorityClass(GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS);
